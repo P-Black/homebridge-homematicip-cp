@@ -1,0 +1,6 @@
+homebridge-homematicip-cp
+
+This package is a CP fork of the original Homebridge plugin `homebridge-homematicip` by marcsowen.
+Original project: https://github.com/marcsowen/homebridge-homematicip
+
+CP build maintained by P-Black with additional Homebridge 2.x compatibility and Apple Home representation improvements.

@@ -1,0 +1,324 @@
+{
+  "pluginAlias": "HomematicIP",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "<p><strong>Homematic IP Pairing</strong></p><ol><li>Access Point ID / SGTIN eintragen. Bindestriche sind erlaubt.</li><li>Auth Token leer lassen und die PIN nur dann eintragen, wenn dein Homematic-IP-System eine PIN verlangt.</li><li>Homebridge neu starten und im Log auf die Aufforderung warten.</li><li>Den blauen Link-Button am Access Point drücken.</li><li>Den erzeugten Token aus dem Log in <strong>Auth Token</strong> kopieren, PIN wieder löschen und erneut starten.</li></ol><p><strong>Hinweis:</strong> Der Token ist sensibel und sollte nicht öffentlich geteilt werden.</p>",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "default": "Homematic IP",
+        "description": "Name der Homebridge-Plattform bzw. Child Bridge."
+      },
+      "accessPoint": {
+        "title": "Access Point ID / SGTIN",
+        "type": "string",
+        "required": true,
+        "placeholder": "DEINE_ACCEESPOINT_ID",
+        "description": "SGTIN deines Homematic-IP-Access-Points. Du findest sie auf dem Access-Point-Aufkleber. Bindestriche und Leerzeichen sind erlaubt; das Plugin bereinigt diese automatisch."
+      },
+      "auth_token": {
+        "title": "Auth Token",
+        "type": "string",
+        "format": "password",
+        "placeholder": "Nach erfolgreichem Pairing hier einfügen",
+        "description": "Leer lassen, um das Pairing zu starten. Nach erfolgreichem Pairing den im Log ausgegebenen Token hier eintragen. Kompatibler Feldname für das ursprüngliche Plugin."
+      },
+      "pin": {
+        "title": "PIN nur für Pairing",
+        "type": "string",
+        "format": "password",
+        "placeholder": "Optional, nach dem Pairing wieder löschen",
+        "description": "Nur während des Pairings eintragen, falls dein Homematic-IP-System eine PIN verlangt. Nach erfolgreichem Pairing wieder entfernen."
+      },
+      "authorizationPin": {
+        "title": "Authorization PIN für Türschloss",
+        "type": "string",
+        "format": "password",
+        "placeholder": "Optional, z. B. für HmIP-DLD",
+        "description": "Globale Autorisierungs-PIN für sicherheitsrelevante Geräte wie HmIP-DLD Türschlossantrieb. Kompatibel mit der alten Homebridge-1.8.5-Konfiguration. Nicht für Pairing verwenden. Nur eintragen, wenn Homematic IP beim Türschloss wirklich eine Zutritts-/Authorization-PIN verlangt; bei INVALID_AUTHORIZATION_PIN leer lassen oder die richtige Zutritts-PIN in der Homematic-IP-App prüfen."
+      },
+      "devices": {
+        "title": "Gerätespezifische Optionen",
+        "type": "object",
+        "description": "Optional: Konfiguration je Geräte-ID oder HOME_SECURITY_SYSTEM. Beispiel: Home Security System ausblenden oder beim Türschlossantrieb die Falle ziehen lassen.",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "asClimateSensor": {
+              "title": "Als Klima-Sensor anzeigen",
+              "type": "boolean",
+              "default": false,
+              "description": "Legacy-Option: Erzwingt Sensor-Darstellung. Bevorzugt climateDeviceMode=\"sensor\" verwenden."
+            },
+            "hide": {
+              "title": "Gerät ausblenden",
+              "type": "boolean",
+              "default": false,
+              "description": "Blendet dieses Gerät in HomeKit aus. Für die Alarmanlage kann HOME_SECURITY_SYSTEM verwendet werden."
+            },
+            "openLatch": {
+              "title": "Türfalle öffnen",
+              "type": "boolean",
+              "default": false,
+              "description": "Nur für HmIP-DLD Türschlossantrieb: Beim HomeKit-Befehl 'Entriegeln' wird OPEN statt UNLOCKED gesendet, die Türfalle wird also gezogen."
+            },
+            "openLatchFallback": {
+              "title": "Bei Türfalle-Fehler auf normales Entriegeln zurückfallen",
+              "type": "boolean",
+              "default": true,
+              "description": "Nur für HmIP-DLD: Wenn OPEN von der Homematic-IP-Cloud mit Fehler abgelehnt wird, sendet das Plugin automatisch UNLOCKED als Fallback."
+            },
+            "pin": {
+              "title": "Geräte-PIN",
+              "type": "string",
+              "format": "password",
+              "description": "Optional für Geräte, die eine Autorisierungs-PIN benötigen, z. B. Türschlossantrieb. Nur eintragen, wenn Homematic IP diese PIN wirklich verlangt; sonst leer lassen. Nur lokal speichern und nicht teilen."
+            },
+            "authorizationPin": {
+              "title": "Geräte-Authorization-PIN",
+              "type": "string",
+              "format": "password",
+              "description": "Alternative zum Feld Geräte-PIN. Hat Vorrang vor Geräte-PIN und globaler Authorization PIN."
+            },
+            "lightSwitch": {
+              "title": "Garagentor-Lichtschalter anzeigen",
+              "type": "boolean",
+              "default": false,
+              "description": "Optional für Garagentor-Module mit Lichtkanal."
+            },
+            "simpleSwitch": {
+              "title": "Notification-Light als einfachen Schalter anzeigen",
+              "type": "boolean",
+              "default": false,
+              "description": "Optional für HmIP-BSL/Notification-Light-Geräte."
+            },
+            "buttonAsSwitch": {
+              "title": "Legacy: Dieses Taster-Gerät als virtuelle Schalter anzeigen",
+              "type": "boolean",
+              "default": false,
+              "description": "Legacy-Option aus 1.3.12-cp.1. Bevorzugt buttonMode pro Gerät verwenden: hidden, stateless oder switch. Wenn buttonMode nicht gesetzt ist, erzwingt buttonAsSwitch=true weiterhin den switch-Modus."
+            },
+            "buttonSwitchMode": {
+              "title": "Modus für dieses Taster-Gerät",
+              "type": "string",
+              "default": "toggle",
+              "oneOf": [
+                {
+                  "title": "Toggle: jeder Tastendruck wechselt Ein/Aus",
+                  "enum": [
+                    "toggle"
+                  ]
+                },
+                {
+                  "title": "Momentary: Tastendruck kurz Ein, dann automatisch Aus",
+                  "enum": [
+                    "momentary"
+                  ]
+                }
+              ],
+              "description": "Nur relevant, wenn dieses Taster-Gerät als virtuelle Schalter angezeigt wird."
+            },
+            "buttonMomentaryResetMs": {
+              "title": "Momentary-Reset in Millisekunden",
+              "type": "number",
+              "default": 750,
+              "description": "Nur bei buttonSwitchMode=momentary."
+            },
+            "buttonMode": {
+              "title": "Modus für dieses Wandtaster-Gerät",
+              "type": "string",
+              "default": "stateless",
+              "oneOf": [
+                {
+                  "title": "Hidden: Wandtaster nicht in HomeKit anzeigen",
+                  "enum": [
+                    "hidden"
+                  ]
+                },
+                {
+                  "title": "Stateless: als HomeKit-Taster für Automationen anzeigen",
+                  "enum": [
+                    "stateless"
+                  ]
+                },
+                {
+                  "title": "Switch: als virtuelle HomeKit-Schalter anzeigen",
+                  "enum": [
+                    "switch"
+                  ]
+                }
+              ],
+              "description": "Überschreibt den globalen buttonMode nur für dieses Gerät. Werte: hidden, stateless oder switch. Der Tippfehler statless wird ebenfalls akzeptiert."
+            },
+            "climateDeviceMode": {
+              "title": "Klima-Geräte-Darstellung für dieses Gerät",
+              "type": "string",
+              "default": "auto",
+              "oneOf": [
+                {
+                  "title": "Auto: Sensoren als Sensor, regelbare Wandthermostate als Thermostat",
+                  "enum": [
+                    "auto"
+                  ]
+                },
+                {
+                  "title": "Sensor: Klima-Geräte nur als Temperatur-/Luftfeuchtesensor darstellen",
+                  "enum": [
+                    "sensor"
+                  ]
+                },
+                {
+                  "title": "Thermostat: Wandthermostat-Typen als regelbare Thermostate darstellen",
+                  "enum": [
+                    "thermostat"
+                  ]
+                }
+              ],
+              "description": "Überschreibt die globale climateDeviceMode-Option nur für dieses Gerät. auto, sensor oder thermostat."
+            }
+          }
+        }
+      },
+      "useRoomNames": {
+        "title": "Räume in Gerätenamen übernehmen",
+        "type": "boolean",
+        "default": false,
+        "description": "Wenn aktiviert, versucht das Plugin die Homematic-IP-Raumzuordnung zu lesen und den Raum in den HomeKit-Gerätenamen einzubauen. HomeKit-Räume selbst können von Homebridge nicht zuverlässig automatisch gesetzt werden."
+      },
+      "roomNameFormat": {
+        "title": "Format für Raumnamen",
+        "type": "string",
+        "default": "{room} {name}",
+        "placeholder": "{room} {name}",
+        "description": "Namensformat bei aktivierter Raumübernahme. Platzhalter: {room} = Homematic-IP-Raum, {name} = Gerätename. Beispiel: {room} - {name}."
+      },
+      "buttonAsSwitch": {
+        "title": "Legacy: Wandtaster als virtuelle Schalter anzeigen",
+        "type": "boolean",
+        "default": false,
+        "description": "Legacy-Option aus 1.3.12-cp.1. Bevorzugt buttonMode verwenden: hidden, stateless oder switch. Wenn buttonMode nicht gesetzt ist, erzwingt buttonAsSwitch=true weiterhin den switch-Modus."
+      },
+      "buttonSwitchMode": {
+        "title": "Modus für virtuelle Wandtaster-Schalter",
+        "type": "string",
+        "default": "toggle",
+        "oneOf": [
+          {
+            "title": "Toggle: jeder Tastendruck wechselt Ein/Aus",
+            "enum": [
+              "toggle"
+            ]
+          },
+          {
+            "title": "Momentary: Tastendruck kurz Ein, dann automatisch Aus",
+            "enum": [
+              "momentary"
+            ]
+          }
+        ],
+        "description": "Nur relevant, wenn Wandtaster als virtuelle Schalter angezeigt werden."
+      },
+      "buttonMomentaryResetMs": {
+        "title": "Momentary-Reset in Millisekunden",
+        "type": "number",
+        "default": 750,
+        "description": "Nur bei buttonSwitchMode=momentary: nach dieser Zeit wird der virtuelle Schalter wieder ausgeschaltet."
+      },
+      "buttonMode": {
+        "title": "Wandtaster-Modus",
+        "type": "string",
+        "default": "stateless",
+        "oneOf": [
+          {
+            "title": "Hidden: Wandtaster nicht in HomeKit anzeigen",
+            "enum": [
+              "hidden"
+            ]
+          },
+          {
+            "title": "Stateless: als HomeKit-Taster für Automationen anzeigen",
+            "enum": [
+              "stateless"
+            ]
+          },
+          {
+            "title": "Switch: als virtuelle HomeKit-Schalter anzeigen",
+            "enum": [
+              "switch"
+            ]
+          }
+        ],
+        "description": "Steuert, wie HmIP-Wandtaster wie HmIP-WRC2/WRC6/BRC2/WRCC2 in HomeKit dargestellt werden. hidden blendet alle Wandtaster aus; stateless ist die native HomeKit-Taster-Darstellung; switch erzeugt virtuelle Schalter ohne echten Homematic-IP-Zustand. Der Tippfehler statless wird aus Kompatibilitätsgründen ebenfalls wie stateless behandelt."
+      },
+      "climateDeviceMode": {
+        "title": "Klima-Geräte-Darstellung",
+        "type": "string",
+        "default": "auto",
+        "oneOf": [
+          {
+            "title": "Auto: Sensoren als Sensor, regelbare Wandthermostate als Thermostat",
+            "enum": [
+              "auto"
+            ]
+          },
+          {
+            "title": "Sensor: Klima-Geräte nur als Temperatur-/Luftfeuchtesensor darstellen",
+            "enum": [
+              "sensor"
+            ]
+          },
+          {
+            "title": "Thermostat: Wandthermostat-Typen als regelbare Thermostate darstellen",
+            "enum": [
+              "thermostat"
+            ]
+          }
+        ],
+        "description": "Steuert die HomeKit-Darstellung von HmIP-Klimageräten. auto stellt HmIP-STH/STHD als Temperatur-/Luftfeuchtesensor dar und regelbare Wandthermostate wie HmIP-WTH-2 als Thermostat. Pro Gerät überschreibbar."
+      }
+    }
+  },
+  "layout": [
+    {
+      "type": "fieldset",
+      "title": "1. Verbindung",
+      "expandable": false,
+      "items": [
+        "name",
+        "accessPoint"
+      ]
+    },
+    {
+      "type": "fieldset",
+      "title": "2. Pairing / Token",
+      "expandable": false,
+      "items": [
+        "auth_token",
+        "pin",
+        "authorizationPin"
+      ]
+    },
+    {
+      "type": "fieldset",
+      "title": "3. Erweiterte Optionen",
+      "expandable": true,
+      "expanded": false,
+      "items": [
+        "useRoomNames",
+        "roomNameFormat",
+        "climateDeviceMode",
+        {
+          "key": "devices",
+          "notitle": false
+        },
+        "buttonMode",
+        "buttonAsSwitch",
+        "buttonSwitchMode",
+        "buttonMomentaryResetMs"
+      ]
+    }
+  ]
+}
