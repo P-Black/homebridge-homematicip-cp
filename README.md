@@ -1,6 +1,6 @@
 # Homebridge Homematicip
 
-**Version:** 1.3.21-cp.1  
+**Version:** 1.3.22  
 **Maintainer/Build:** P-Black CP build
 
 Finale CP-Version des Homematic-IP-Plugins für Homebridge mit Homebridge-2.x-Kompatibilität, verbessertem Pairing, sauberer HomeKit-Darstellung und bereinigter lokaler Plugin-/Config-Darstellung.

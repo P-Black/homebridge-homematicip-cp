@@ -12,5 +12,5 @@ exports.PLUGIN_NAME = 'homebridge-homematicip-cp';
 /**
  * Version to be used in protocol communication
  */
-exports.PLUGIN_VERSION = '1.3.21-cp.1';
+exports.PLUGIN_VERSION = '1.3.22';
 //# sourceMappingURL=settings.js.map

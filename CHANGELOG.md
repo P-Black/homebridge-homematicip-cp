@@ -1,16 +1,22 @@
+## 1.3.22
+
+- npm-ready stable release without prerelease suffix.
+- Updated package and internal plugin version to `1.3.22`.
+- Retains all functionality from `1.3.21-cp.1` / `1.3.21`, including Homebridge 2.x compatibility, `buttonMode`, `climateDeviceMode`, HmIP-DLD fallback, improved smoke detector names, room-name support and redacted logs.
+
 # Changelog
 
-## 1.3.21-cp.1
+## 1.3.22
 
 - Replaced remaining example Access Point IDs with the placeholder `DEINE_ACCEESPOINT_ID`.
-- Updated package and internal plugin version to `1.3.21-cp.1`.
+- Updated package and internal plugin version to `1.3.22`.
 
-## 1.3.21-cp.1
+## 1.3.22
 
 - Added explicit attribution that this CP package is based on the original `homebridge-homematicip` project by marcsowen.
 - Added an Attribution / Herkunft section to the README with a link to the original project.
 - Added package contributor metadata for the original project.
-- Updated the internal protocol/log version to `1.3.21-cp.1`.
+- Updated the internal protocol/log version to `1.3.22`.
 - Kept package name `homebridge-homematicip-cp`, display name `Homebridge Homematicip` and platform alias `HomematicIP`.
 - Retains all functionality from 1.3.19-cp.1.
 
